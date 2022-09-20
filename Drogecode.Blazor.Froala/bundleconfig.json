@@ -17,7 +17,7 @@
     "sourceMap": true
   },
   {
-    "outputFileName" : "./wwwroot/js/froala.min.js",
+    "outputFileName" : "./wwwroot/js/Froala.min.js",
     "inputFiles" : [
       "./node_modules/froala-editor/js/froala_editor.pkgd.min.js",
       "./node_modules/froala-editor/js/plugins/save.min.js"
