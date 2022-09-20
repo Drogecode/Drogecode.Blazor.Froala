@@ -1,0 +1,1 @@
+﻿# Froala editor

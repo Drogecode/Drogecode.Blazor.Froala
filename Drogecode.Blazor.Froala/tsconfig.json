@@ -1,0 +1,9 @@
+{
+  "compilerOptions" : {
+    "module" : "commonjs",
+    "target" : "es5",
+    "sourceMap" : true,
+    "skipLibCheck" : true
+  },
+  "include" : ["./wwwroot"]
+}

@@ -1,0 +1,6 @@
+﻿@if (!string.IsNullOrEmpty(_froalaId))
+{
+    <div id="@_froalaId" @key="@_forced" class="@Class @(_dragging ? "fr-element fr-view" : "")">
+        @((MarkupString)Detail.HtmlContent)
+    </div>
+}

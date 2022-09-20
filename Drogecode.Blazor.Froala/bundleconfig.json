@@ -1,0 +1,26 @@
+﻿[
+  {
+    "outputFileName": "./wwwroot/css/Drogecode.Blazor.Froala.css",
+    "inputFiles": [
+      "./node_modules/froala-editor/css/froala_editor.pkgd.min.css"
+    ]
+  },
+  {
+    "outputFileName": "./wwwroot/js/Drogecode.Blazor.Froala.min.js",
+    "inputFiles": [
+      "./wwwroot/js/Drogecode.Blazor.Froala.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": true
+  },
+  {
+    "outputFileName" : "./wwwroot/js/froala.min.js",
+    "inputFiles" : [
+      "./node_modules/froala-editor/js/froala_editor.pkgd.min.js",
+      "./node_modules/froala-editor/js/plugins/save.min.js"
+    ]
+  }
+]
