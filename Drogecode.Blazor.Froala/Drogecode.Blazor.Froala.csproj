@@ -7,6 +7,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Taco Droogers</Authors>
     <Version>0.1.1-workinprogress</Version>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 
@@ -28,6 +30,13 @@
     <Folder Include="Helpers\" />
     <Folder Include="Models\" />
     <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
