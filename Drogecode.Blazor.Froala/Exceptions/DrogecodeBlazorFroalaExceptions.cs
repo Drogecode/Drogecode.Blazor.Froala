@@ -3,18 +3,18 @@
 namespace Drogecode.Blazor.Froala.Exceptions;
 
 [Serializable]
-public class DrogecodeBlazorFroalaExceptions : Exception, ISerializable
+public class DrogecodeBlazorFroalaException : Exception
 {
-    public DrogecodeBlazorFroalaExceptions()
+    public DrogecodeBlazorFroalaException()
     {
     }
 
-    public DrogecodeBlazorFroalaExceptions(string message)
+    public DrogecodeBlazorFroalaException(string message)
         : base(message)
     {
     }
 
-    public DrogecodeBlazorFroalaExceptions(string message, Exception inner)
+    public DrogecodeBlazorFroalaException(string message, Exception inner)
         : base(message, inner)
     {
     }

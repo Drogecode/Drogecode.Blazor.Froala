@@ -47,9 +47,9 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     private void NullCheck()
     {
         if (Config == null)
-            throw new DrogecodeBlazorFroalaExceptions("FroalaEditorConfig is required!");
+            throw new DrogecodeBlazorFroalaException("FroalaEditorConfig is required!");
         if (Detail == null)
-            throw new DrogecodeBlazorFroalaExceptions("FroalaEditorDetail is required!");
+            throw new DrogecodeBlazorFroalaException("FroalaEditorDetail is required!");
         if (string.IsNullOrEmpty(FroalaApiKey))
             Console.WriteLine("FroalaApiKey is absent this will give an error in production!");
     }
@@ -80,6 +80,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
         }
         catch (TaskCanceledException)
         {
+            LogToConsole($"CreateEditor {_froalaId} canceled");
         }
     }
 
