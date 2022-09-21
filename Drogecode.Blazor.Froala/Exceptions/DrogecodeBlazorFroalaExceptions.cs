@@ -1,4 +1,6 @@
 ﻿namespace Drogecode.Blazor.Froala.Exceptions;
+
+[Serializable]
 public class DrogecodeBlazorFroalaExceptions : Exception
 {
     public DrogecodeBlazorFroalaExceptions()
