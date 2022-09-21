@@ -1,4 +1,5 @@
-﻿using Drogecode.Blazor.Froala.Helpers;
+﻿using Drogecode.Blazor.Froala.Exceptions;
+using Drogecode.Blazor.Froala.Helpers;
 using Drogecode.Blazor.Froala.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -46,9 +47,9 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     private void NullCheck()
     {
         if (Config == null)
-            throw new NullReferenceException("FroalaEditorConfig is required!");
+            throw new DrogecodeBlazorFroalaExceptions("FroalaEditorConfig is required!");
         if (Detail == null)
-            throw new NullReferenceException("FroalaEditorDetail is required!");
+            throw new DrogecodeBlazorFroalaExceptions("FroalaEditorDetail is required!");
         if (string.IsNullOrEmpty(FroalaApiKey))
             Console.WriteLine("FroalaApiKey is absent this will give an error in production!");
     }
