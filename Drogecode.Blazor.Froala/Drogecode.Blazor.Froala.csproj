@@ -6,7 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>Taco Droogers</Authors>
-		<Version>0.1.6</Version>
+		<Version>0.1.7</Version>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -15,6 +15,8 @@
 
 	<ItemGroup>
 	  <Content Remove="bundleconfig.json" />
+	  <Content Remove="package-lock.json" />
+	  <Content Remove="package.json" />
 	  <Content Remove="tsconfig.json" />
 	</ItemGroup>
 
@@ -51,6 +53,8 @@
 			<PackagePath>\</PackagePath>
 		</None>
 		<None Include="bundleconfig.json" />
+		<None Include="package-lock.json" />
+		<None Include="package.json" />
 		<None Include="tsconfig.json" />
 	</ItemGroup>
 
