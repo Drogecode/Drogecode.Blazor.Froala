@@ -1,15 +1,17 @@
-﻿var dotNetHelper = [];
-var editors = [];
+﻿let dotNetHelper = [];
+let editors = [];
 
 function frSetDotNetHelper(froalaId, value) {
     dotNetHelper[froalaId] = value;
 }
 
 function frDisposeDotNetHelper(froalaId) {
+    if (dotNetHelper[froalaId] == null) return;
     delete dotNetHelper[froalaId];
 }
 
 function frDisposeEditor(froalaId) {
+    if (editors[froalaId] == null) return;
     editors[froalaId].destroy();
     delete editors[froalaId];
 }
@@ -69,7 +71,7 @@ function frCreateEditor(elementId, froalaId, contentId, config) {
     return froalaEditor;
 }
 
-function frSave(froalaId)
-{
+function frSave(froalaId) {
+    if (editors[froalaId] == null) return;
     editors[froalaId].save.save();
 }

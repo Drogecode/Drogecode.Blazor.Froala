@@ -1,6 +1,6 @@
 ﻿[
   {
-    "outputFileName": "./wwwroot/css/Drogecode.Blazor.Froala.css",
+    "outputFileName": "./wwwroot/css/Froala.css",
     "inputFiles": [
       "./node_modules/froala-editor/css/froala_editor.pkgd.min.css"
     ]

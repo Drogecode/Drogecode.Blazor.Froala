@@ -1,10 +1,15 @@
 ﻿namespace Drogecode.Blazor.Froala.Models;
 
-public sealed class FroalaEditorDetail : RefreshModel
+public sealed class FroalaEditorDetail
 {
+    public event Action? RefreshRequested;
     public event Action? StartDrag;
     public event Action? StopDrag;
     public event Action? Save;
+    public void CallRequestRefresh()
+    {
+        RefreshRequested?.Invoke();
+    }
     public void CallStartDrag()
     {
         StartDrag?.Invoke();

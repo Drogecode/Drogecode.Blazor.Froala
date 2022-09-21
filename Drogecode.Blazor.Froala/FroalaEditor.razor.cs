@@ -18,16 +18,20 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     [Parameter] public EventCallback OnSaveBefore { get; set; }
     [Parameter] public EventCallback OnSaveAfter { get; set; }
     [Parameter] public EventCallback OnSaveError { get; set; }
+
     /// <summary>
     /// Enable when debugging FroalaEditor, should never be enabled in production
     /// </summary>
-    [Parameter] public bool LogProgressToConsole { get; set; }
+    [Parameter]
+    public bool LogProgressToConsole { get; set; }
+
     private DotNetObjectReference<FroalaEditor>? _dotNetHelper;
     private CancellationTokenSource _cts = new();
     private ulong _forced = 0;
     private string _froalaId = string.Empty;
     private bool _dragging;
     private bool _dotNetHelperSet;
+    private bool _isSaving;
 
     protected override void OnInitialized()
     {
@@ -53,14 +57,14 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     {
         if (firstRender)
         {
-            LogToConsole($"Rendering: {_froalaId} {(Detail.HtmlContent.Length > 30 ? Detail.HtmlContent[..30] : string.Empty)}");
+            LogToConsole($"Rendering: {_froalaId} {(Detail.HtmlContent.Length > 30 ? Detail.HtmlContent[..30] : Detail.HtmlContent)}");
             _dotNetHelper = DotNetObjectReference.Create(this);
             await JsRuntime.InvokeVoidAsync("frSetDotNetHelper", _froalaId, _dotNetHelper);
             _dotNetHelperSet = true;
             if (Detail.InitializeFroalaOnFirstRender)
                 await CreateEditor();
             else
-                LogToConsole($"Not initializing: {_froalaId} {(Detail.HtmlContent.Length > 30 ? Detail.HtmlContent[..30] : string.Empty)}");
+                LogToConsole($"Not initializing: {_froalaId} {(Detail.HtmlContent.Length > 30 ? Detail.HtmlContent[..30] : Detail.HtmlContent)}");
             Detail.Rendered = true;
         }
     }
@@ -99,18 +103,21 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     [JSInvokable]
     public async Task SaveBefore()
     {
+        _isSaving = true;
         await OnSaveBefore.InvokeAsync();
     }
 
     [JSInvokable]
     public async Task SaveAfter()
     {
+        _isSaving = false;
         await OnSaveAfter.InvokeAsync();
     }
 
     [JSInvokable]
     public async Task SaveError()
     {
+        _isSaving = false;
         await OnSaveError.InvokeAsync();
     }
 
@@ -133,12 +140,15 @@ public sealed partial class FroalaEditor : IAsyncDisposable
 
     private async void Save()
     {
-        if (Detail.Initialized)
-            await JsRuntime.InvokeVoidAsync("frSave", _froalaId);
+        if (!Detail.Initialized) return;
+        _isSaving = true;
+        await JsRuntime.InvokeVoidAsync("frSave", _froalaId);
     }
 
-    private void RefreshMe()
+    private async void RefreshMe()
     {
+        await WaitForSaveDone();
+        LogToConsole($"Waiting {_froalaId} done");
         _forced++;
         StateHasChanged();
     }
@@ -147,12 +157,26 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     {
         if (Detail.Initialized)
         {
+            await WaitForSaveDone();
             await JsRuntime.InvokeVoidAsync("frDisposeEditor", _froalaId);
             Detail.Initialized = false;
             LogToConsole($"Editor {_froalaId} disposed");
         }
 
         Detail.InitializeFroalaOnFirstRender = true;
+    }
+
+    private async Task WaitForSaveDone()
+    {
+        var i = 0;
+        while (_isSaving)
+        {
+            i++;
+            await Task.Delay(10);
+            if (i <= 100) continue;
+            LogToConsole($"Still saving {_froalaId} after waiting 1 second, letting progress continue");
+            break;
+        }
     }
 
     private void LogToConsole(string message)
