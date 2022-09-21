@@ -1,4 +1,4 @@
-using Drogecode.Blazor.ForalaDemo;
+using Drogecode.Blazor.FroalaDemo;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

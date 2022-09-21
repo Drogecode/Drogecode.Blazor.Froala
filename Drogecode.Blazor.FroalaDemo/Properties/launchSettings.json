@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "Drogecode.Blazor.ForalaDemo": {
+    "Drogecode.Blazor.FroalaDemo": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
