@@ -25,6 +25,10 @@ In the <body> add the .js files
 This component currently only integrate a small sections of the api options in Froala, if you mis anything, open an issue or PR, with the url to the [event / method / opion](https://froala.com/wysiwyg-editor/docs/api/) you are missing. For obvius reasons PR's will be solved a lot faster than issues.
 
 ## FAQ
+
+Q: Is there a demo how to implement the component?
+
+A: Yes! [here .razor](https://github.com/Drogecode/Drogecode.Blazor.Froala/blob/master/Drogecode.Blazor.FroalaDemo/Pages/Index.razor) and ][here .cs](https://github.com/Drogecode/Drogecode.Blazor.Froala/blob/master/Drogecode.Blazor.FroalaDemo/Pages/Index.razor.cs)
  
 Q: Does the blazor copy of the DOM knows about this component?
 

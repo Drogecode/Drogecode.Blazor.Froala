@@ -31,7 +31,8 @@ public sealed class FroalaEditorDetail
     public string HtmlContent { get; set; } = string.Empty;
     public string StylingId { get; set; } = string.Empty;
     public bool InitializeFroalaOnFirstRender { get; set; } = true;
-    public bool Initialized { get; set; }
-    public bool Rendered { get; set; }
-    public bool IsDeleted { get; set; }
+    public bool IsInitialized { get; internal set; }
+    public bool IsRendered { get; internal set; }
+    public bool IsDeleted { get; internal set; }
+    public bool IsDisposed { get; internal set; }
 }

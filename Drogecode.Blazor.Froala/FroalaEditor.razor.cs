@@ -38,6 +38,8 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     {
         NullCheck();
         _froalaId = string.IsNullOrEmpty(Detail.FroalaId) ? $"froala-editor-{RandomHelper.RandomName(5)}" : Detail.FroalaId;
+        Detail.IsDisposed = false;
+        Detail.FroalaId = _froalaId;
         Detail.RefreshRequested += RefreshMe;
         Detail.StartDrag += StartDrag;
         Detail.StopDrag += StopDrag;
@@ -62,11 +64,11 @@ public sealed partial class FroalaEditor : IAsyncDisposable
             _dotNetHelper = DotNetObjectReference.Create(this);
             await JsRuntime.InvokeVoidAsync("frSetDotNetHelper", _froalaId, _dotNetHelper);
             _dotNetHelperSet = true;
-            if (Detail.InitializeFroalaOnFirstRender)
+            if (Detail.InitializeFroalaOnFirstRender && !Detail.IsDeleted)
                 await CreateEditor();
             else
                 LogToConsole($"Not initializing: {_froalaId} {(Detail.HtmlContent.Length > 30 ? Detail.HtmlContent[..30] : Detail.HtmlContent)}");
-            Detail.Rendered = true;
+            Detail.IsRendered = true;
         }
     }
 
@@ -74,9 +76,14 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     {
         try
         {
-            await JsRuntime.InvokeVoidAsync("frCreateEditor", _cts.Token, $"#{_froalaId}", _froalaId, Detail.Id, Config);
-            Detail.Initialized = true;
-            LogToConsole($"Editor {_froalaId} created");
+            if (!Detail.IsDeleted)
+            {
+                await JsRuntime.InvokeVoidAsync("frCreateEditor", _cts.Token, $"#{_froalaId}", _froalaId, Detail.Id, Config);
+                Detail.IsInitialized = true;
+                LogToConsole($"Editor {_froalaId} (re)created");
+            }
+            else
+                LogToConsole($"Editor {_froalaId} marked as deleted and not (re)created");
         }
         catch (TaskCanceledException)
         {
@@ -125,7 +132,6 @@ public sealed partial class FroalaEditor : IAsyncDisposable
 
     private async void StartDrag()
     {
-        if (_dragging) return;
         await DisposeFroalaJs();
         _forced++;
         _dragging = true;
@@ -134,7 +140,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
 
     private async void StopDrag()
     {
-        if (!_dragging) return;
+        await WaitForSaveDone();
         StateHasChanged();
         await CreateEditor();
         _dragging = false;
@@ -142,13 +148,14 @@ public sealed partial class FroalaEditor : IAsyncDisposable
 
     private async void Save()
     {
-        if (!Detail.Initialized) return;
+        if (!Detail.IsInitialized) return;
         _isSaving = true;
         await JsRuntime.InvokeVoidAsync("frSave", _froalaId);
     }
 
     private async void RefreshMe()
     {
+        if (Detail.IsDeleted) return;
         await WaitForSaveDone();
         LogToConsole($"Waiting {_froalaId} done");
         _forced++;
@@ -157,11 +164,11 @@ public sealed partial class FroalaEditor : IAsyncDisposable
 
     private async Task DisposeFroalaJs()
     {
-        if (Detail.Initialized)
+        if (Detail.IsInitialized)
         {
             await WaitForSaveDone();
             await JsRuntime.InvokeVoidAsync("frDisposeEditor", _froalaId);
-            Detail.Initialized = false;
+            Detail.IsInitialized = false;
             LogToConsole($"Editor {_froalaId} disposed");
         }
 
@@ -196,7 +203,8 @@ public sealed partial class FroalaEditor : IAsyncDisposable
         if (_dotNetHelperSet)
             await JsRuntime.InvokeVoidAsync("frDisposeDotNetHelper", _froalaId);
         _dotNetHelperSet = false;
-        Detail.Rendered = false;
+        Detail.IsDisposed = true;
+        Detail.IsRendered = false;
         Detail.RefreshRequested -= RefreshMe;
         Detail.StartDrag -= StartDrag;
         Detail.StopDrag -= StopDrag;
