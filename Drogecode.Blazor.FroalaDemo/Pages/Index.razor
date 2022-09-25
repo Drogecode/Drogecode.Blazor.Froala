@@ -5,4 +5,13 @@
 
 <h1>Drogecode Froala demo</h1>
 
-<FroalaEditor Config="_config" Detail="_detail" OnClick="OnClick" OnBlur="OnBlur" />
+<FroalaEditor Config="_config" Detail="_detail"/>
+
+@if (_detail.IsInitialized)
+{
+    <button @onclick="_detail.CallDeInitialize">DeInitialize</button>
+}
+else
+{
+    <button @onclick="_detail.CallInitialize">Initialize</button>
+}

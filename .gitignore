@@ -364,8 +364,5 @@ FodyWeavers.xsd
 
 # Project files to Ignore
 /Drogecode.Blazor.Froala/wwwroot/css/**
-/Drogecode.Blazor.Froala/wwwroot/js/Drogecode.Blazor.Froala.js
-/Drogecode.Blazor.Froala/wwwroot/js/Drogecode.Blazor.Froala.min.js.map
-/Drogecode.Blazor.Froala/wwwroot/js/Drogecode.Blazor.Froala.min.js
-/Drogecode.Blazor.Froala/wwwroot/js/Drogecode.Blazor.Froala.js.map
-/Drogecode.Blazor.Froala/wwwroot/js/Froala.min.js
+/Drogecode.Blazor.Froala/wwwroot/js/**.js
+/Drogecode.Blazor.Froala/wwwroot/js/**.js.map

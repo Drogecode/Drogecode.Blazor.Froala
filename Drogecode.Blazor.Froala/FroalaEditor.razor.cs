@@ -11,14 +11,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     [Inject] private IJSRuntime JsRuntime { get; set; } = default!;
     [Parameter, EditorRequired] public FroalaEditorConfig Config { get; set; } = default!;
     [Parameter, EditorRequired] public FroalaEditorDetail Detail { get; set; } = default!;
-    [Parameter] public string FroalaApiKey { get; set; } = string.Empty;
     [Parameter] public string Class { get; set; } = string.Empty;
-    [Parameter] public EventCallback OnContentChanged { get; set; }
-    [Parameter] public EventCallback OnClick { get; set; }
-    [Parameter] public EventCallback OnBlur { get; set; }
-    [Parameter] public EventCallback OnSaveBefore { get; set; }
-    [Parameter] public EventCallback OnSaveAfter { get; set; }
-    [Parameter] public EventCallback OnSaveError { get; set; }
 
     /// <summary>
     /// Enable when debugging FroalaEditor, should never be enabled in production
@@ -41,8 +34,8 @@ public sealed partial class FroalaEditor : IAsyncDisposable
         Detail.IsDisposed = false;
         Detail.FroalaId = _froalaId;
         Detail.RefreshRequested += RefreshMe;
-        Detail.StartDrag += StartDrag;
-        Detail.StopDrag += StopDrag;
+        Detail.DeInitialize += DeInitialize;
+        Detail.Initialize += Initialize;
         Detail.Save += Save;
     }
 
@@ -52,8 +45,8 @@ public sealed partial class FroalaEditor : IAsyncDisposable
             throw new DrogecodeBlazorFroalaException("FroalaEditorConfig is required!");
         if (Detail == null)
             throw new DrogecodeBlazorFroalaException("FroalaEditorDetail is required!");
-        if (string.IsNullOrEmpty(FroalaApiKey))
-            Console.WriteLine("FroalaApiKey is absent this will give an error in production!");
+        if (string.IsNullOrEmpty(Config?.Key))
+            Console.WriteLine("FroalaApiKey in Config.Key is absent this will give an error in production!");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -80,6 +73,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
             {
                 await JsRuntime.InvokeVoidAsync("frCreateEditor", _cts.Token, $"#{_froalaId}", _froalaId, Detail.Id, Config);
                 Detail.IsInitialized = true;
+                Detail.CallRefreshParent();
                 LogToConsole($"Editor {_froalaId} (re)created");
             }
             else
@@ -92,45 +86,45 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     }
 
     [JSInvokable]
-    public async Task ContentChanged()
+    public void ContentChanged()
     {
-        await OnContentChanged.InvokeAsync();
+        Detail.CallOnContentChanged();
     }
 
     [JSInvokable]
-    public async Task Click()
+    public void Click()
     {
-        await OnClick.InvokeAsync();
+        Detail.CallOnClick();
     }
 
     [JSInvokable]
-    public async Task Blur()
+    public void Blur()
     {
-        await OnBlur.InvokeAsync();
+        Detail.CallOnBlur();
     }
 
     [JSInvokable]
-    public async Task SaveBefore()
+    public void SaveBefore()
     {
         _isSaving = true;
-        await OnSaveBefore.InvokeAsync();
+        Detail.CallOnSaveBefore();
     }
 
     [JSInvokable]
-    public async Task SaveAfter()
+    public void SaveAfter()
     {
         _isSaving = false;
-        await OnSaveAfter.InvokeAsync();
+        Detail.CallOnSaveAfter();
     }
 
     [JSInvokable]
-    public async Task SaveError()
+    public void SaveError()
     {
         _isSaving = false;
-        await OnSaveError.InvokeAsync();
+        Detail.CallOnSaveError();
     }
 
-    private async void StartDrag()
+    private async void DeInitialize()
     {
         await DisposeFroalaJs();
         _forced++;
@@ -138,7 +132,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
         StateHasChanged();
     }
 
-    private async void StopDrag()
+    private async void Initialize()
     {
         await WaitForSaveDone();
         StateHasChanged();
@@ -169,6 +163,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
             await WaitForSaveDone();
             await JsRuntime.InvokeVoidAsync("frDisposeEditor", _froalaId);
             Detail.IsInitialized = false;
+            Detail.CallRefreshParent();
             LogToConsole($"Editor {_froalaId} disposed");
         }
 
@@ -206,8 +201,8 @@ public sealed partial class FroalaEditor : IAsyncDisposable
         Detail.IsDisposed = true;
         Detail.IsRendered = false;
         Detail.RefreshRequested -= RefreshMe;
-        Detail.StartDrag -= StartDrag;
-        Detail.StopDrag -= StopDrag;
+        Detail.DeInitialize -= DeInitialize;
+        Detail.Initialize -= Initialize;
         Detail.Save -= Save;
         _forced++;
     }
