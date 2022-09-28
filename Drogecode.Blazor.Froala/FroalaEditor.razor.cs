@@ -11,7 +11,6 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     [Inject] private IJSRuntime JsRuntime { get; set; } = default!;
     [Parameter, EditorRequired] public FroalaEditorConfig Config { get; set; } = default!;
     [Parameter, EditorRequired] public FroalaEditorDetail Detail { get; set; } = default!;
-    [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public string Class { get; set; } = string.Empty;
 
     /// <summary>

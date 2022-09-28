@@ -16,15 +16,22 @@ public sealed partial class Index : IDisposable
 This will show in the editor when you load the component!";
     }
 
-    public void OnClick()
+    private void OnClick()
     {
         Console.WriteLine($"Onclick called for {_detail?.FroalaId}");
     }
 
-    public void OnBlur()
+    private void OnBlur()
     {
         Console.WriteLine($"OnBlur called for {_detail?.FroalaId}");
     }
+
+    private void Delete()
+    {
+        _detail.IsDeleted = true;
+        _detail.CallDeInitialize();
+    }
+
     private void RefreshMe()
     {
         StateHasChanged();

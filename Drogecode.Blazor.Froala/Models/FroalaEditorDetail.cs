@@ -71,9 +71,10 @@ public sealed class FroalaEditorDetail
     /// </summary>
     public string? FroalaId { get; set; }
     public string HtmlContent { get; set; } = string.Empty;
+    public string StylingId { get; set; } = string.Empty;
     public bool InitializeFroalaOnFirstRender { get; set; } = true;
+    public bool IsDeleted { get; set; }
     public bool IsInitialized { get; internal set; }
     public bool IsRendered { get; internal set; }
-    public bool IsDeleted { get; internal set; }
     public bool IsDisposed { get; internal set; }
 }
