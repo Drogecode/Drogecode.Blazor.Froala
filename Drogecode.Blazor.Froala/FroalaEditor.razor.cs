@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace Drogecode.Blazor.Froala;
 
-public sealed partial class FroalaEditor : IAsyncDisposable
+public sealed partial class FroalaEditor : IAsyncDisposable, IDisposable
 {
     [Inject] private IJSRuntime JsRuntime { get; set; } = default!;
     [Parameter, EditorRequired] public FroalaEditorConfig Config { get; set; } = default!;
@@ -16,8 +16,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     /// <summary>
     /// Enable when debugging FroalaEditor, should never be enabled in production
     /// </summary>
-    [Parameter]
-    public bool LogProgressToConsole { get; set; }
+    [Parameter] public bool LogProgressToConsole { get; set; }
 
     private DotNetObjectReference<FroalaEditor>? _dotNetHelper;
     private CancellationTokenSource _cts = new();
@@ -151,7 +150,6 @@ public sealed partial class FroalaEditor : IAsyncDisposable
     {
         if (Detail.IsDeleted) return;
         await WaitForSaveDone();
-        LogToConsole($"Waiting {_froalaId} done");
         _forced++;
         StateHasChanged();
     }
@@ -191,7 +189,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        LogToConsole($"Dispose {_froalaId}");
+        LogToConsole($"Dispose async start {_froalaId}");
         _cts.Cancel();
         _dotNetHelper?.Dispose();
         await DisposeFroalaJs();
@@ -204,6 +202,30 @@ public sealed partial class FroalaEditor : IAsyncDisposable
         Detail.DeInitialize -= DeInitialize;
         Detail.Initialize -= Initialize;
         Detail.Save -= Save;
+        Dispose(disposing: false);
+        GC.SuppressFinalize(this);
+        LogToConsole($"Dispose async stop {_froalaId}");
         _forced++;
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    public void Dispose(bool disposing)
+    {
+        if (!disposing) return;
+        LogToConsole($"Dispose sync {_froalaId}");
+        _cts.Cancel();
+        _dotNetHelper?.Dispose();
+        _dotNetHelperSet = false;
+        Detail.IsDisposed = true;
+        Detail.IsRendered = false;
+        Detail.RefreshRequested -= RefreshMe;
+        Detail.DeInitialize -= DeInitialize;
+        Detail.Initialize -= Initialize;
+        Detail.Save -= Save;
     }
 }

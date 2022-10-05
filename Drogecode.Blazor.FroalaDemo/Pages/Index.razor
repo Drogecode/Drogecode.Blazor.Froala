@@ -11,7 +11,7 @@
 {
     <button @onclick="_detail.CallDeInitialize">DeInitialize</button>
 }
-else
+else if (!_detail.IsDeleted)
 {
     <button @onclick="_detail.CallInitialize">Initialize</button>
 }

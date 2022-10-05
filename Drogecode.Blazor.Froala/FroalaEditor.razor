@@ -1,6 +1,6 @@
 ﻿@if (!string.IsNullOrEmpty(_froalaId) && !Detail.IsDeleted)
 {
-    <div id="@Detail.StylingId" class="@Class">
+    <div id="froala-editor-styling-id-@Detail.StylingId" class="@Class">
         <div id="@_froalaId" class="@(_dragging ? "fr-element fr-view" : "")" @key="@_forced">
             @((MarkupString)Detail.HtmlContent)
         </div>

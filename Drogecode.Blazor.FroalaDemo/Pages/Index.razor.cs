@@ -30,6 +30,7 @@ This will show in the editor when you load the component!";
     {
         _detail.IsDeleted = true;
         _detail.CallDeInitialize();
+        RefreshMe();
     }
 
     private void RefreshMe()
