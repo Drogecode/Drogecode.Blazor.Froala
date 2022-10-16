@@ -123,7 +123,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable, IDisposable
         Detail.CallOnSaveError();
     }
 
-    private async void DeInitialize()
+    private async Task DeInitialize()
     {
         await DisposeFroalaJs();
         _forced++;
@@ -131,7 +131,7 @@ public sealed partial class FroalaEditor : IAsyncDisposable, IDisposable
         StateHasChanged();
     }
 
-    private async void Initialize()
+    private async Task Initialize()
     {
         await WaitForSaveDone();
         StateHasChanged();
@@ -139,14 +139,14 @@ public sealed partial class FroalaEditor : IAsyncDisposable, IDisposable
         _dragging = false;
     }
 
-    private async void Save()
+    private async Task Save()
     {
         if (!Detail.IsInitialized) return;
         _isSaving = true;
         await JsRuntime.InvokeVoidAsync("frSave", _froalaId);
     }
 
-    private async void RefreshMe()
+    private async Task RefreshMe()
     {
         if (Detail.IsDeleted) return;
         await WaitForSaveDone();

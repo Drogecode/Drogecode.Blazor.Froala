@@ -9,6 +9,6 @@
   "author": "Taco Droogers",
   "license": "ISC",
   "dependencies": {
-    "froala-editor": "^4.0.14"
+    "froala-editor": "^4.0.15"
   }
 }

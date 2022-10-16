@@ -3,10 +3,10 @@
 public sealed class FroalaEditorDetail
 {
     // Drogecode.Blazor.Froala actions
-    public event Action? RefreshRequested;
-    public event Action? DeInitialize;
-    public event Action? Initialize;
-    public event Action? Save;
+    public event Func<Task>? RefreshRequested;
+    public event Func<Task>? DeInitialize;
+    public event Func<Task>? Initialize;
+    public event Func<Task>? Save;
     public event Action? RefreshParent;
 
     // Froala actions
