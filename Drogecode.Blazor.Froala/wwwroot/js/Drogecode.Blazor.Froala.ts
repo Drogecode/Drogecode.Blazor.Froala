@@ -42,6 +42,7 @@ function frCreateEditor(elementId, froalaId, contentId, config) {
                 froalaId: froalaId,
                 contentId: contentId
             },
+            tableStyles: config.tableStyles,
             events: {
                 'contentChanged': function () {
                     dotNetHelper[froalaId].invokeMethodAsync('ContentChanged');
