@@ -2,6 +2,10 @@
 
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Drogecode.Blazor.Froala?label=NuGet%20Downloads)](https://www.nuget.org/packages/Drogecode.Blazor.Froala/#versions-body-tab)  
 
+# Archived
+
+This was a fun learning project, but I won't continue the development.
+
 # Froala editor
 
 [Froala wysiwyg-editor](https://froala.com/wysiwyg-editor/) is a payed editor for your web projects. This blazor component makes it posible to add it to your blazor wasm projects.
